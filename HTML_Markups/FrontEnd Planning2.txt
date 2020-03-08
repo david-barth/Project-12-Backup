@@ -1,0 +1,98 @@
+Frontend Planning 1: 
+
+---> The frontend should ideally be a single page web app, which can be powered by React. 
+
+---> There are several challenges that must be addressed in the frontend: 
+
+    1. Modification of the Twit endpoints and functionality: 
+
+        ---> Should the tweet data be obtained by the user's account? 
+
+        ---> Or should tweet data be obtained through a geolocator endpoint usage? 
+
+        ---> How should the information be entered into the app and what organizational principal should be used to bundle the tweets? 
+
+            ---> The information should be entered as a subject within a region? 
+
+            ---> Should the information be entered and correlated to trending topics on twitter? 
+
+    
+    2. The division of functionalities in the SPA: 
+
+        ---> Should the entire process be regulated to just a single press of a button (ie tweet gathering ---> NN processing ---> Article Displays)>
+
+        ---> Or should the entire process be divided into different phases of functionality moderated by different buttons?
+
+        ---> These questions will ultimately depend on the 'paradigm' of the app: 
+
+            ---> Is the app meant to be a more streamlined user experience that serves news directly? 
+
+            ---> Or is the app meant to be more of an explanatory app that guides the user through the entire experience? 
+
+
+
+Addressing the Questions: 
+
+1. Modification of the Twit endpoints and functionality: 
+
+    ---> So far, the idea was to take on a batch of tweets from within a region in order to classify the predominant news categories in the region (located within a region). 
+
+    ---> However, without a focal point or focus for the tweets, then a random search will net very little cohesion for the collected tweet batch. 
+
+    ---> Some ideas for focusing the tweet collection from the Twitter API capabilities: 
+
+        1. Filtering for real time tweets. 
+
+            ---> This includes hashtag based filtering, retweeting filtering methods, and even geolocator methods. 
+
+            ---> In fact, the best method could be a combination method of the above based on the following flow of operations: 
+
+                1. Information is collected from input fields related to the following: 
+
+                    ---> The geographical location desired (if not searching for "global news" recommendations). 
+
+                    ---> A desired subject to search for in relation to news.  (This subject is best multi topic and the recommendations will provide the best suited topic related to the tweet content used). 
+
+                    ---> If in geographical mode, then an input radius is also best included. 
+
+
+                2. The geographical information will be used in an endpoint to extract a set of latitude and longtitude coordinates. 
+
+                3. These coordinates along with specifically chosen hashtag filter and retweeting filters will be used to construct a fully fledged search query. 
+
+                4. These tweets will be bunched and vectorized for analysis by the NN engine. 
+
+
+    ---> Therefore, the required field for the detail your tweet section will include: 
+
+        ---> Desired search subject input. 
+
+        ---> Two inputs for hashtag filtering. 
+
+        ---> A 'place' input. 
+    
+        ---> A 'radius' input. 
+    
+
+    ---> The best mechanism for this is a one way sliding process done in a specific order in order to collect the input information.  The order could be: 
+
+        1. "Global Mode" or "Regional Mode" ---> Place and Radius Inputs 
+
+        2. Desired Subject Specification.  ---> Search subject input
+
+        3. Hashtag Filtering Specification. ---> 2 hashtag subject inputs 
+
+    ---> Frontend wise: This mechanism can be achieved with a sliding form element or even a carousel. 
+
+
+        ---> The form element could all just be one form that will only be submitted when the final appropriate button is selected: 
+
+            ---> Ie each "next" button would make the appropriate section of the form invisible and then bring up the next section. 
+
+        ---> Or each section could be its own separate form element which will submit the form to a database and then on the final button click, the DB will then draw out the information to submit to the NN. 
+
+            ---> This method is 'easier' but more computationally expensive. 
+
+
+
+

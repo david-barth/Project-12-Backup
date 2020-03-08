@@ -1,0 +1,95 @@
+Planning: React Conversion and Integration with Express. 
+
+
+
+Combining of React and Express: 
+
+---> This project will require the combination of React and Express in order to fully function correctly: 
+
+    1. React will be the front end component that captures user interaction and input to send to the backend. 
+
+    2. Express will be directly concerned with the database and will effectively be the API for the app. 
+
+
+---> The following represent the challenges and difficulties associated with this phase of the project: 
+
+    1. Which side do the API/AJAX calls go for the following portions of the project: 
+
+        A. Calls to the Twitter API. 
+
+        B. Calls to the DB. 
+
+        C. Calls to the Guardian API. 
+
+        ---> Whether these go at the front end or the backend is still unknown. 
+
+
+    2. Which side do aspects of the tweet processing go?
+
+        A. Do cleaning and vectorization calls go in the frontend or the backend?  
+
+            ---> This question will depend on where MongoDB is integrated into the app.  
+
+        B. Where does the NN functionality occur? 
+
+            ---> Most likely the backend, but some research is best done in order to find which is more effective. 
+
+
+    3. The challenge of routing on the React frontend and routing on the backend: 
+
+        A. What form does the backend routing in Express take? 
+
+        B. How does the organizational frontend routing relate to the backend routing? 
+
+        ---> The most important element of planning here is to consider the interaction between frontend and backend routing. 
+
+
+
+Connecting Express and React Together: 
+
+---> In this interaction, the UI will be purely done via React and Express will manage the calls to the local mongo databases. 
+
+---> The Express end will be a point where React can use a fetch request in order to gather up results from the neural network and other information (This shall be determined). 
+
+---> A possible setup and configuraton process could be: 
+
+    1. Use 'npx create-react-app client' in order to establish a frontend client portion of the web app for React. 
+
+    2. Either manually install Express via npm or use express-generator in order to install a backend segment with express. 
+
+    3. A proxy needs to be set up in order to configure the app within the package.json file in the client folder (e.g. "proxy": "http://localhost:5000/"). 
+
+        ---> This allows the client server to run / proxy API requests to the Express server for further processing. 
+
+        ---> An alternative to this can be achieved by simply placing the URL within the fetch requests inside of the class components of the React side.  
+
+    4. The Express server must be running before the client server runs in order to properly allow for the full app to work and be tested. 
+
+
+---> This overall process involves the running of two servers, practically in parallel, which mimics the normal process of website frontend and backend. 
+
+---> The following considerations need to be made in order to adapt this configuration to the web app's unique situation: 
+
+    ---> This web app will involve the use of 3 different server origins: Twitter API, the app backend / DB storage, and The Guardian API. 
+
+        ---> Twitter API and The Guardian API calls can potentially be made with fetch requests / axios requests on the front end. 
+
+        ---> NN data processing and certain DB interactions may have to have a hybrid frontend / backend interaction. 
+
+        ---> NN prediction functionality will involve a pure backend presence. 
+
+
+    ---> A file structure needs to be carefully considered for this. 
+
+
+Focus 1: Creating the React Component Structure: 
+
+---> This will involve taking a look at which aspects of the HTML markup should be separated into which components: 
+
+---> The App level component should be ideally composed of the following: 
+
+
+
+
+
+

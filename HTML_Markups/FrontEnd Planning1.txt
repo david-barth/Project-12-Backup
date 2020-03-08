@@ -1,0 +1,38 @@
+Frontend Planning 1: 
+
+---> The frontend should ideally be a single page web app, which can be powered by React. 
+
+---> There are several challenges that must be addressed in the frontend: 
+
+    1. Modification of the Twit endpoints and functionality: 
+
+        ---> Should the tweet data be obtained by the user's account? 
+
+        ---> Or should tweet data be obtained through a geolocator endpoint usage? 
+
+        ---> How should the information be entered into the app and what organizational principal should be used to bundle the tweets? 
+
+            ---> The information should be entered as a subject within a region? 
+
+            ---> Should the information be entered and correlated to trending topics on twitter? 
+
+    
+    2. The division of functionalities in the SPA: 
+
+        ---> Should the entire process be regulated to just a single press of a button (ie tweet gathering ---> NN processing ---> Article Displays)>
+
+        ---> Or should the entire process be divided into different phases of functionality moderated by different buttons?
+
+        ---> These questions will ultimately depend on the 'paradigm' of the app: 
+
+            ---> Is the app meant to be a more streamlined user experience that serves news directly? 
+
+            ---> Or is the app meant to be more of an explanatory app that guides the user through the entire experience? 
+
+
+    3.  
+
+
+
+
+
