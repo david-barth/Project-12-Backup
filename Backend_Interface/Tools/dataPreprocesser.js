@@ -12,7 +12,7 @@ class Preprocessor {
     }
 
 
-    async cleanAndVectorize(tweets) {
+    async cleanAndVectorize(tweets, signal) {
         let container = []
 
         //Load and Clean Tweets: 
@@ -22,38 +22,42 @@ class Preprocessor {
         //Aggregate tweets and convert to input vector: 
         const tweetDoc = cleanedTweets.reduce((current, combined) => combined.concat(current));
         container.push(tweetDoc);  
-        const vector = await this.vectorize(container); 
+        let vector = await this.vectorize(container); 
+
+        //Update input vector if necessary: 
+        if (signal === 'augment') {
+            const combined = await this.augment(vector);
+            vector = [combined]; 
+        }
 
         //Store Vectors in DB Collection: 
         this.storeVector(vector); 
+        return 'done'; 
     }
     
+    
+    async augment(vec) {
+        let combinedVec = []; 
 
-    /*async accessDatasets() { 
-        //Initialize arrays:
-        let tweetBatches = [];  
-        let features = []; 
-        let labels = []; 
-    
-        //Read information from tweets database: 
-        const tweetQuery = await tweet.find({label: 'Prediction'}); 
-        tweetBatches.push(tweetQuery); 
+        //Find initial vector in db and isolate: 
+        const initialEntry = await vector.find({label: "Prediction"}); 
+        const initialVec = initialEntry[0].vector; 
+        
 
-    
-        //Data Decomposition to document blobs: 
-        tweetBatches.forEach((batch, i) => {
-            let textBlobFeature = [];  
-            for (let object of batch) { 
-                labels.push(object.label);
-                textBlobFeature.push(object.text); 
-            }
-            features.push(textBlobFeature);
-        })
-    
-        return {features: features} 
-    }*/
+        //Loop through vectors and add elements to each other: 
+        for (let i in vec[0]) {
+            let combinedEl = vec[0][i] + initialVec[i];
+            combinedVec.push(combinedEl); 
+        }
 
-    
+        //Delete initial input vector from the db collection and return combined input array: 
+        await this.dbDelete(); 
+        return combinedVec;
+    }
+
+    //continuation: Investigate the mechanism of adding the two arrays together and then complete the augment backend functionality
+
+
     async vectorize (docArray) {
         //Array container initializations: 
         let docWordCollection = docArray; 
@@ -105,6 +109,16 @@ class Preprocessor {
             }
         });
     }
+
+    dbDelete = () => {
+        vector.deleteMany({label: 'Prediction'}, (err) => {
+          if (err) {
+              console.log(err); 
+          } else {
+              console.log('Deleted'); 
+          }
+        })
+      }; 
 }
 
 

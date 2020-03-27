@@ -116,7 +116,7 @@ class DataPrepEngine {
   }
 
 
-  async process() {
+  async process(res, signal = '') {
     const parameters = await this.searchParams;  
 
     T.get('search/tweets', parameters, (err, data) => {   
@@ -144,7 +144,7 @@ class DataPrepEngine {
                 tweets.push(tweetText)
             }
         }
-      this.Preprocessor.cleanAndVectorize(tweets);
+      this.Preprocessor.cleanAndVectorize(tweets, signal).then(signal => res.json({response: signal, tweetCount: tweets.length})); 
     })
   }
     

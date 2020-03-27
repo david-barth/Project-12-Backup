@@ -82,7 +82,7 @@ router.post('/tweetPost', function(req, res, next) {
   //Format POST data and perform operations to get tweets and convert to input vector: 
   const inputData = formatBody(req.body)
   const prepEngine = new DataPrepEngine(inputData);
-  prepEngine.process(); 
+  prepEngine.process(res)
 }); 
 
 /**
@@ -92,6 +92,24 @@ router.post('/tweetPost', function(req, res, next) {
  * This vector is stored into the mongo database for processing in the next route.  
  * 
  * Remaining Issue: Implement 'loading' feature until process() completes. 
+ */
+
+
+//Tweet Augment Post Route: 
+router.post('/tweetAugment', function(req, res, next) {
+  //Prepare PrepEngine to augment via signal: 
+  const signal = 'augment';
+   
+  //Process as before:\
+  const inputData = formatBody(req.body)
+  const prepEngine = new DataPrepEngine(inputData);
+  prepEngine.process(res, signal);  
+}); 
+
+/**
+ * Similar to the above tweetPost route, but also adds an 'augment' signal to the route. 
+ * This signal triggers code that augments and updates a currently existing input vector in the database. 
+ * Only triggered upon pressing the 'augment' button on the frontend. 
  */
 
 
@@ -109,7 +127,7 @@ router.get('/getNews', async function(req, res, next) {
 
   //Get News based off of predicted category:
   const newsAtricles = await getNews(newsCategory);
-  res.send(newsAtricles); 
+  res.json(newsAtricles); 
 })
 
 
