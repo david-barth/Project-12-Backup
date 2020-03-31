@@ -22,7 +22,8 @@ class ModelInputs extends Component {
                               placeholder="Type a location..." 
                               id="location" 
                               type="text" 
-                              className="validate" 
+                              className="validate"
+                              required  
                               disabled={geoState}
                               ref={ref2} 
                               />
@@ -36,7 +37,8 @@ class ModelInputs extends Component {
                               placeholder="Specify a radius..." 
                               id="radius" 
                               type="text" 
-                              className="validate" 
+                              className="validate"
+                              required 
                               disabled={geoState}
                               ref={ref3} 
                               />

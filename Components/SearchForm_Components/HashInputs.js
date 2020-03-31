@@ -23,7 +23,8 @@ class HashInputs extends Component {
                                 placeholder="Enter hashtag here..." 
                                 id="hashtag1" 
                                 type="text" 
-                                className="validate" 
+                                className="validate"
+                                required 
                                 disabled={this.props.hashState}
                                 ref={ref7}
                                 />
@@ -37,7 +38,8 @@ class HashInputs extends Component {
                                 placeholder="Enter second hashtag here..." 
                                 id="hashtag2" 
                                 type="text" 
-                                className="validate" 
+                                className="validate"
+                                required 
                                 disabled={this.props.hashState}
                                 ref={ref8}
                                 />

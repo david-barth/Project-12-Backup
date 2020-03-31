@@ -30,10 +30,10 @@ class SideNav extends Component {
 
     render() {
         return (
-            <div className="row">
+            <div  id="side" className="row">
                 <div className="col s3 blue lighten-4">
-                    <ul id="slide-out" ref={this.sideNavRef} className="sidenav blue lighten-4">
-                        <li><NavLink className="waves-effect" to="/intro">Intro</NavLink></li>
+                    <ul id="slide-out" ref={this.sideNavRef}  className="sidenav blue lighten-4">
+                        <li><NavLink className="waves-effect" to="/">Intro</NavLink></li>
                         <li><NavLink className="waves-effect" to="/MLPowered">Machine Learning Powered</NavLink></li>
                         <li><NavLink className="waves-effect" to="/underHood">What Happens?</NavLink></li>
                         <li><NavLink className="waves-effect" to="/interplay">An Interplay of Numbers and Words</NavLink></li>
@@ -42,7 +42,7 @@ class SideNav extends Component {
                 </div>
 
                 <Switch>
-                    <Route exact path="/intro" component={() => (<SideItem1 />)} />
+                    <Route exact path="/" component={() => (<SideItem1 />)} />
                     <Route exact path="/MLPowered" component={() => (<SideItem2 />)} />
                     <Route exact path="/underHood" component={() => (<SideItem3 />)} />
                     <Route exact path="/interplay" component={() => (<SideItem4 />)}/>

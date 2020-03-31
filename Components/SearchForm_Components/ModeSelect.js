@@ -33,7 +33,7 @@ class ModeSelect extends Component {
                     </div>
                 </div>
                 <div className="input-field col s6" onChange={this.props.toggle}>
-                    <select id="selection" ref={ref1} defaultValue={'DEFAULT'}>
+                    <select id="Mode Select" ref={ref1} required defaultValue={'DEFAULT'}>
                     <option value="DEFAULT" disabled>Choose your mode</option>
                     <option value="global">Global</option>
                     <option value="geographical">Geographical</option>

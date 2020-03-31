@@ -28,6 +28,7 @@ class SearchForm extends Component {
         this.geoSelection = this.geoSelection.bind(this);
         this.hashSelection = this.hashSelection.bind(this); 
         this.radioChoice = this.radioChoice.bind(this);
+        this.validationCheck = this.validationCheck.bind(this); 
     }
 
     initialize () {
@@ -49,12 +50,11 @@ class SearchForm extends Component {
     }
 
     componentDidUpdate() {
-        const geoNode = this.geoRef.current; 
-        const hashNode = this.hashRef.current; 
-
-       if (this.state.formPart === 1) {
-            hashNode.style.display = 'none'           
-       } else {
+       const geoNode = this.geoRef.current; 
+       const hashNode = this.hashRef.current;
+       hashNode.style.display = 'none'
+       
+       if (this.state.formPart === 2) {
             geoNode.style.display = 'none'; 
             hashNode.style.display = 'block'; 
        }
@@ -64,25 +64,71 @@ class SearchForm extends Component {
 
 
     advanceForm () {
-        this.setState({formPart: 2}); 
+        const signal = this.validationCheck(); 
+        
+        if (signal === 'Pass') {
+            this.setState({formPart: 2});
+        } else {
+            alert(signal); 
+        }
     }
 
+    validationCheck() {
+        let inputs = [
+            this.props.ref1.current, 
+            this.props.ref2.current,
+            this.props.ref3.current 
+        ]; 
 
-    geoSelection(e) {
-        const selection = e.target.value; 
-        if (selection === 'geographical' && this.geoState) {
-            this.setState((prevState) => ({
-                geoState: !prevState.geoState  
-              })); 
+        //Make check for global selection in mode select menu: 
+        if (inputs[0].value === 'global') {
+            return 'Pass'; 
+        }
+
+        //Set up initial message: 
+        let initial = 'Please fill out or select the following fields:\n'; 
+        let message = initial; 
+
+        //Make check for empty inputs: 
+        for (let i in inputs) {
+           if (inputs[i].value === '' || inputs[i].value === 'DEFAULT' || inputs[i].disabled === true) {
+               message += `Field: ${inputs[i].id}\n`
+           } 
+        }
+
+        if (message !== initial) {
+            return message
+        }
+
+        //Check for numbers in radius input: 
+        const regexNum = /^\d+(\\.\d+)?$/; 
+        if (inputs[1].value.search(regexNum) === 0) {
+            message = 'Location field: Please enter a location using letters only.'; 
+            return message; 
+        }
+       
+        //Check for numbers in radius input: 
+        if (inputs[2].value.search(regexNum) === -1) {
+            message = 'Radius Field: Please enter a numerical value';
+            return message;  
+        }
+        
+        return 'Pass';  
+    }
+ 
+
+    async geoSelection(e) {
+        const selection = e.target.value;
+        
+        if (selection === 'global') {
+            await this.setState({geoState: true}); 
         } 
-        else if (selection === 'global' && !this.geoState) {
-            this.setState((prevState) => ({
-                geoState: !prevState.geoState 
-              })); 
+        else if (selection === 'geographical') {
+            await this.setState({geoState: false}); 
         }
     } 
-    //Logic: If geographical, then input must go from disabled (true) to enabled (false), vice versa
 
+    
 
     hashSelection() {
         if (this.state.radioState === 'option1' && !this.state.hashState) {
@@ -108,7 +154,6 @@ class SearchForm extends Component {
 
 
     render() {
-        const initialized = this.state.formPart;
         const geoState = this.state.geoState; 
         const hashState = this.state.hashState; 
 
@@ -154,9 +199,13 @@ class SearchForm extends Component {
 
 export default SearchForm; 
 
-//Remaining Issues for Later: 
 
-    //Change the state issue that comes with the GeoSelect selection menu (Ie incorrect disabling of geographical mode inputs). 
+//Strategy for React-HTML5 form validity: 
 
+    //Separate validations must be accounted for each half of the submit form. 
 
-//Continuation: Continue experimenting with why refs are undefined.  Resolve this issue. 
+    //The first half must have an event handler or function that will allow for the advancing of the component rendering. 
+
+    //This validation will have to be applied with the logic in the componentDidUpdate method in order to prevent rendering from occuring. 
+
+    //The biggest issue is not being able to allow for the HTML 5 validation message to shown as needed

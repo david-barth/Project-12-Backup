@@ -19,7 +19,8 @@ class TweetInput extends Component {
                     <input  placeholder="Enter tweet subject..." 
                             id="tweetSubject" 
                             type="text" 
-                            className="validate" 
+                            className="validate"
+                            required 
                             disabled={false}
                             ref={this.ref4}
                             />
@@ -33,7 +34,7 @@ class TweetInput extends Component {
                                 name="hashtagFilter" 
                                 value="option1" 
                                 type="radio" 
-                                checked={this.props.buttonState === 'option1'}
+                                checked={this.props.buttonState === 'option1'} 
                                 onChange={this.props.radioChoice}
                                 ref={this.ref5}
                         />
