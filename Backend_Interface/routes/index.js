@@ -61,28 +61,19 @@ async function getNews(newsCategory) {
 const dbDelete = () => {
   vector.deleteMany({label: 'Prediction'}, (err) => {
     if (err) {
-        console.log(err); 
+        return err; 
     } else {
         console.log('Deleted'); 
     }
   })
 }; 
 
-
-//Testing: 
-
-
-
-
-
-
-
 //Tweet Post Route: 
 router.post('/tweetPost', function(req, res, next) {
-  //Format POST data and perform operations to get tweets and convert to input vector: 
-  const inputData = formatBody(req.body)
-  const prepEngine = new DataPrepEngine(inputData);
-  prepEngine.process(res)
+    //Format POST data and perform operations to get tweets and convert to input vector: 
+    const inputData = formatBody(req.body)
+    const prepEngine = new DataPrepEngine(inputData);
+    prepEngine.process(res); 
 }); 
 
 /**
@@ -90,8 +81,6 @@ router.post('/tweetPost', function(req, res, next) {
  * DataPrepEngine organizes the information into a search query that gathers tweets according to search filtering parameters. 
  * Tweets are cleaned of 'noise' (emojis, special characters, etc) and converted (vectorized) into a numerical form. 
  * This vector is stored into the mongo database for processing in the next route.  
- * 
- * Remaining Issue: Implement 'loading' feature until process() completes. 
  */
 
 
@@ -100,7 +89,7 @@ router.post('/tweetAugment', function(req, res, next) {
   //Prepare PrepEngine to augment via signal: 
   const signal = 'augment';
    
-  //Process as before:\
+  //Process as before:
   const inputData = formatBody(req.body)
   const prepEngine = new DataPrepEngine(inputData);
   prepEngine.process(res, signal);  
@@ -110,6 +99,23 @@ router.post('/tweetAugment', function(req, res, next) {
  * Similar to the above tweetPost route, but also adds an 'augment' signal to the route. 
  * This signal triggers code that augments and updates a currently existing input vector in the database. 
  * Only triggered upon pressing the 'augment' button on the frontend. 
+ */
+
+
+//New Search Route: 
+router.get('/newSearch', async (req, res, next) => {
+  try {
+    await dbDelete();
+    res.json({code: 200}) 
+  } catch (error) { 
+    res.json({code: 500, message: 'Something went wrong!'})
+  }
+}) 
+
+/**
+ * Delete route that is triggered whenever the appropriate component is triggered on the frontend. 
+ * The culmulative input vector is deleted from the database. 
+ * This creates a 'blank slate' for a new series of searches to begin.
  */
 
 

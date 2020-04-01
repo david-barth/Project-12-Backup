@@ -1,5 +1,4 @@
 const cleaner = require('./cleaner').Cleaner; 
-const tweet = require('../models/tweet');
 const wordMap = require('../models/wordMap');
 const vector = require('../models/vector'); 
 
@@ -13,26 +12,34 @@ class Preprocessor {
 
 
     async cleanAndVectorize(tweets, signal) {
-        let container = []
 
-        //Load and Clean Tweets: 
-        this.cleaner.switchList(tweets)
-        const cleanedTweets = await this.cleaner.clean();
+        try {
+            let container = []
 
-        //Aggregate tweets and convert to input vector: 
-        const tweetDoc = cleanedTweets.reduce((current, combined) => combined.concat(current));
-        container.push(tweetDoc);  
-        let vector = await this.vectorize(container); 
+            //Load and Clean Tweets: 
+            this.cleaner.switchList(tweets)
+            const cleanedTweets = await this.cleaner.clean();
 
-        //Update input vector if necessary: 
-        if (signal === 'augment') {
-            const combined = await this.augment(vector);
-            vector = [combined]; 
-        }
+            //Aggregate tweets and convert to input vector: 
+            const tweetDoc = cleanedTweets.reduce((current, combined) => combined.concat(current));
+            container.push(tweetDoc);  
+            let vector = await this.vectorize(container); 
 
-        //Store Vectors in DB Collection: 
-        this.storeVector(vector); 
-        return 'done'; 
+            //Update input vector if necessary: 
+            if (signal === 'augment') {
+                const combined = await this.augment(vector);
+                vector = [combined]; 
+            }
+
+            //Store Vectors in DB Collection: 
+            this.storeVector(vector); 
+            return 'done';     
+
+        } catch (error) {
+            error.status = 500;
+            error.message = 'Something went wrong. Please do another search using a different search term';   
+            return error;   
+        }        
     }
     
     
