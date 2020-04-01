@@ -37,7 +37,7 @@ class Preprocessor {
 
         } catch (error) {
             error.status = 500;
-            error.message = 'Something went wrong. Please do another search using a different search term';   
+            error.message = 'Something went wrong.  Please do another search using a different search term';   
             return error;   
         }        
     }

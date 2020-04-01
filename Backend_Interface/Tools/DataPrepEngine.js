@@ -160,36 +160,6 @@ class DataPrepEngine {
   }
 }
 
-//Continuation: Implement error controls based on the following scenarios: 
-
-  //1. When a 1st search is done, with no stored input tweets, and an error occurs: normal response is sent. 
-
-  //2. When a 2nd search is done, with 1 stored input tweet and augment is clicked, and an error occurs: normal response is sent and no db deletion occurs. 
-
-  //3. When a new search is clicked via the Nav component (Change nav portion to reflect 'new search'), and a db deletion of input tweets occurs. 
-
-      //Core issue: There is no return button for the ErrorPart component.  The following represents a good solution: 
-
-            //A frontend solution where a button is clicked to redirect the user back to the initial component. 
-
-              //This button must take into account whether the augment button was pressed or if this is an initial search. 
-
-              //The tweetSearch statistic can be used as the condition for the conditional rendering of the button functionalities in the ErrorPart component: 
-
-                //tweetSearch < 1 ---> Button functionality is of a new search, with no input data inside.  Using the tweetPost route in the backend. 
-
-                //tweetSearch >= 1 ---> Button functionality is augment search, with input data present.  This will involve the tweetAugment route in the backend. 
-
-
-              //Additionally, a new /newSearch route should be implemented in the backend to delete the input tweet in the db to prevent multiple copies of input tweets.  
-
-                //This is synched with a fetch method onClick handler tied to the proper Nav component routing navlink. 
-
-              
-
-
-
-
 module.exports.DataPrepEngine = DataPrepEngine; 
 
 
