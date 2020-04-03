@@ -17,12 +17,18 @@ class NewsDisplay extends Component {
             selectedArticle: 1 
         }
 
+        //Refs: 
+        this.ref1 = React.createRef(); 
+        this.ref2 = React.createRef(); 
+        this.ref3 = React.createRef(); 
+
         //Other Properties
         this.articleCount = [1, 2, 3];
         
         //Function Bindings: 
         this.selectArticle = this.selectArticle.bind(this); 
     }
+
 
     async selectArticle(e) {
         const selected = e.target.id; 
@@ -32,7 +38,6 @@ class NewsDisplay extends Component {
 
 
     render() {
-       
 
         if (this.props.articleInfo === null) {
             return (
@@ -56,9 +61,9 @@ class NewsDisplay extends Component {
                 <Fragment>
                     <div className="row">
                         <ul className="pagination center bottom">
-                            <li className="waves-effect" ><NavLink onClick={this.selectArticle} exact to="/1" id="1" className="waves-effect">1</NavLink></li>
-                            <li className="waves-effect" ><NavLink onClick={this.selectArticle} exact to="/2" id="2" className="waves-effect">2</NavLink></li>
-                            <li className="waves-effect" ><NavLink onClick={this.selectArticle} exact to="/3" id="3" className="waves-effect">3</NavLink></li>
+                            <li className="waves-effect" ><NavLink  onClick={this.selectArticle} exact to="/1" id="1" className="waves-effect">1</NavLink></li>
+                            <li className="waves-effect" ><NavLink  onClick={this.selectArticle} exact to="/2" id="2" className="waves-effect">2</NavLink></li>
+                            <li className="waves-effect" ><NavLink  onClick={this.selectArticle} exact to="/3" id="3" className="waves-effect">3</NavLink></li>
                         </ul>
                         {activeArticle}
                     </div>

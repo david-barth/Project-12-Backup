@@ -23,7 +23,7 @@ const ErrorPart = (props) => {
         )
     } 
 
-    else if (SearchCount > 1) {
+    else if (searchCount > 1) {
         return (
             <div className="container">
                  <p>Error Code {props.statusCode}: &ensp; {props.message}</p>
@@ -33,6 +33,14 @@ const ErrorPart = (props) => {
                     </div>
                 </div>
             </div>
+        )
+    }
+
+    else {
+        return (
+        <div className="container">
+            <p>Error Code 500: News retrieval failed.  Please click 'Start a new search!' to begin a new search</p>
+        </div>
         )
     }
 }

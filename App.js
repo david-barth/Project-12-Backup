@@ -11,6 +11,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 //Component Imports: 
 import Nav from './Components/Nav';
 import SideNav from './Components/SideNav_Components/SideNav'; 
+import ErrorPart from './Components/ErrorPart'; 
 import SearchForm from './Components/SearchForm_Components/SearchForm';
 import LoadingBar from './Components/LoadingBar'
 import Stat from './Components/Stat_Components/Stat';
@@ -19,6 +20,7 @@ import NewsDisplay from './Components/NewsDisplay_Components/NewsDisplay';
 //Key Variables: 
 const initial = 'http://localhost:9000/tweetPost'
 const augment = 'http://localhost:9000/tweetAugment'
+const newSearch = 'http://localhost:9000/newSearch'
 
 
 
@@ -30,7 +32,9 @@ class App extends Component {
     //States:
     this.state = {
       activeComponent : null,
-      articleInfo: null, 
+      articleInfo: null,
+      statusCode: 0,  
+      message: '',
       tweetCount: 0, 
       tweetSearch: 0, 
     }
@@ -44,29 +48,33 @@ class App extends Component {
     this.ref6 = React.createRef(); 
     this.ref7 = React.createRef(); 
     this.ref8 = React.createRef();
+   
     
-    this.refCollection = [];  
-
+    this.refCollection = [];
+    
     //Method Bindings:
     this.componentChange = this.componentChange.bind(this); 
     this.submitHandler1 = this.submitHandler1.bind(this);  
     this.submitHandler2 = this.submitHandler2.bind(this);  
     this.formatNews = this.formatNews.bind(this); 
     this.getNews = this.getNews.bind(this);
-    this.prepareStats = this.prepareStats.bind(this);  
+    this.prepareStats = this.prepareStats.bind(this);
+    this.newSearch = this.newSearch.bind(this); 
   }
 
   componentDidUpdate () {
-    this.refCollection = [this.ref1.current, 
-                          this.ref2.current, 
-                          this.ref3.current, 
-                          this.ref4.current, 
-                          this.ref5.current, 
-                          this.ref6.current, 
-                          this.ref7.current, 
-                          this.ref8.current
-                          ];
+    this.refCollection = [
+      this.ref1.current, 
+      this.ref2.current, 
+      this.ref3.current, 
+      this.ref4.current, 
+      this.ref5.current, 
+      this.ref6.current, 
+      this.ref7.current, 
+      this.ref8.current,  
+      ];
   }
+
 
   get initialState() {
     return {
@@ -79,10 +87,10 @@ class App extends Component {
     let rec; 
 
     if (this.state.tweetCount < 50) {
-      rec = 'YES!'; 
+      rec = 'Redo search with augment!'; 
     } 
     else if (this.state.tweetCount >= 50) {
-      rec = 'NO!'; 
+      rec = 'Click "Read"! There are enough tweets.'; 
     }
 
     let stats = {
@@ -94,6 +102,7 @@ class App extends Component {
     return stats; 
   }
 
+  
 
   async getNews(e) {
     const button = e.target.id; 
@@ -106,17 +115,25 @@ class App extends Component {
         const response = await fetch('http://localhost:9000/getNews'); 
         const newsArticles = await response.json(); 
         
-        //Format news response set to new object and set state and reset tweet statistics: 
-        const formatted = this.formatNews(newsArticles); 
-        await this.setState({ articleInfo: formatted, 
-                              activeComponent: '', 
-                              tweetCount: 0, 
-                              tweetSearch: 0
-                            });
-        
+        if (newsArticles.code === 200) {
+          //Format news response set to new object and set state and reset tweet statistics: 
+            const formatted = this.formatNews(newsArticles.response); 
+            await this.setState({ articleInfo: formatted, 
+                                  activeComponent: '', 
+                                  tweetCount: 0, 
+                                  tweetSearch: 0
+                                });
+            
 
-        //Render NewsDisplay:
-        this.setState({activeComponent: button})
+            //Render NewsDisplay:
+            this.setState({activeComponent: button})    
+        } 
+        
+        else if (newsArticles.code === 500) {
+          await this.setState({activeComponent: 'Error',
+                                tweetSearch: 0})       
+        }
+        
     }
 }
 
@@ -137,7 +154,7 @@ formatNews(newsArticles) {
 
 
   async componentChange(e) {
-    const active = e.target.id || e; 
+    const active = e.target.id || e;
     await this.setState(this.initialState)
     this.setState((prevState) => ({
       activeComponent: prevState.activeComponent + active
@@ -214,24 +231,41 @@ formatNews(newsArticles) {
         body: JSON.stringify(postData)
       })
     
-    const response = await fetchRequest.json(); 
+    const response = await fetchRequest.json();  
+    
+    if (response.tweetCount === undefined) {
+      response.tweetCount = 0; 
+    }
 
+    
     this.setState((prevState) => 
       ({tweetCount: prevState.tweetCount + response.tweetCount, 
-        tweetSearch: prevState.tweetSearch + 1})); 
+        tweetSearch: prevState.tweetSearch + 1}));
 
-
-    if(fetchRequest.ok === true) {
+    if(response.code === 200) {
       this.renderStat(); 
-    } 
+
+    } else {
+      await this.setState({activeComponent: 'Error', message: response.message, statusCode: response.code})
+    }
   }
 
+  async newSearch() {
+    const fetchRequest = await fetch(newSearch); 
+    const response = await fetchRequest.json(); 
+
+    if (response.code === 200) {
+        await this.setState({tweetCount: 0, tweetSearch: 0});
+    } else {
+        await this.setState({activeComponent: 'Error', message: response.message, statusCode: response.code})
+    }
+  }
 
   render() {
     const active = this.state.activeComponent;
-    let activePart;  
-
-    if (active === "SearchForm") {
+    let activePart;
+  
+    if (active === "SearchForm" || active === "SearchFormError") {
       activePart = <Route exact to="/search" component={() => (<SearchForm
                                                                            submitHandler={this.submitHandler1}
                                                                            ref1={this.ref1} 
@@ -245,7 +279,7 @@ formatNews(newsArticles) {
                                                                            />)}/>  
     }
 
-    else if (active === "Augment") {
+    else if (active === "Augment" || active =="AugmentError") {
       activePart = <Route exact to="/search" component={() => (<SearchForm
                                                                           submitHandler={this.submitHandler2}
                                                                           ref1={this.ref1} 
@@ -259,27 +293,38 @@ formatNews(newsArticles) {
                                                                           />)}/> 
     }
 
+    else if (active === 'Error') {
+      activePart = <ErrorPart 
+                              statusCode={this.state.statusCode} 
+                              message={this.state.message} 
+                              tweetSearch={this.state.tweetSearch}
+                              tweetCount={this.state.tweetCount}
+                              componentChange={this.componentChange}
+                              /> 
+    }
+
     else if (active === 'Loading') {
       activePart = <LoadingBar />      
     }
 
     else if (active === "Stat") {
-      activePart = <Route exact to="/stat" component={() => (<Stat stats={this.prepareStats()} getNews={this.getNews} componentChange={this.componentChange} />)}/> 
+      activePart = <Route exact to="/stat" component={() => (<Stat 
+                                                                  stats={this.prepareStats()} 
+                                                                  getNews={this.getNews} 
+                                                                  componentChange={this.componentChange} 
+                                                                  />)}/> 
     }
 
     else if (active === "NewsDisplay" || active === "ReadNews") {
       activePart = <Route exact to="/display" component={() => (<NewsDisplay articleInfo={this.state.articleInfo} />)}/>
     }
 
-    if (active === "Intro" || active === null || active === "Home") {
+    if (active === "Intro" || active === null || active === "Home" || active === 'nav') {
       return (
         <BrowserRouter>
           <Fragment>
-            <Nav componentChange={this.componentChange}/>
+            <Nav newSearch={this.newSearch} componentChange={this.componentChange}/>
             <SideNav />
-            <Switch>
-              {activePart}          
-            </Switch>
           </Fragment>    
         </BrowserRouter>
       )
@@ -287,7 +332,7 @@ formatNews(newsArticles) {
       return (
         <BrowserRouter>
           <Fragment>
-            <Nav componentChange={this.componentChange}/>
+            <Nav newSearch={this.newSearch} componentChange={this.componentChange}/>
             <Switch>
               {activePart}          
             </Switch>
@@ -303,10 +348,12 @@ export default App;
 
 //Continuation:  
 
-  //4. Resolve issue related to the select menu of the geographical mode in the form component. 
+    //2. Implement error handling and controls: 
+    
+        //Implement the getNews error handlings. 
 
-  //5. Figure out a simple component to place on the landing page.
+    //3. Add comments to all major portions of the code and eliminate all redundant unused pieces of code.  
 
-  //6. Add HTML 5 form validations to specific inputs. 
+    //4. Ensure that the package.json file contains all the necessary dependencies. 
 
-
+    //5. Host the web app on a hosting service. 

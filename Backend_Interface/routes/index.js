@@ -41,7 +41,7 @@ const coinToss = (min, max) => {
 
 
 
-async function getNews(newsCategory) {
+async function getNews(newsCategory, res) {
   let newsObject = {}; 
 
   try {
@@ -53,7 +53,8 @@ async function getNews(newsCategory) {
     await dbDelete(vector); 
     return newsObject
   } catch (error) {
-    return error     
+    let code = 500;
+    res.json({response: message, code: code})      
   }
 }
 
@@ -121,19 +122,18 @@ router.get('/newSearch', async (req, res, next) => {
 
 //News Get Route: 
 router.get('/getNews', async function(req, res, next) {
-  //Predict news category from input vector: 
-  const MLEngine = new NN_Engine();
-  const sciTechList = ['science', 'technology'];  
-  let newsCategory = await MLEngine.predictCategory(); 
-  
-  if (newsCategory === "science and technology") {
-    let subCategory = coinToss(0, 1); 
-    newsCategory = sciTechList[subCategory]; 
-  }
-
-  //Get News based off of predicted category:
-  const newsAtricles = await getNews(newsCategory);
-  res.json(newsAtricles); 
+    //Predict news category from input vector: 
+      const MLEngine = new NN_Engine();
+      const sciTechList = ['science', 'technology'];  
+      let newsCategory = await MLEngine.predictCategory(); 
+      
+      if (newsCategory === "science and technology") {
+        let subCategory = coinToss(0, 1); 
+        newsCategory = sciTechList[subCategory]; 
+      }
+      //Get News based off of predicted category:
+      const newsAtricles = await getNews(newsCategory, res);
+      res.json({response: newsAtricles, code: 200}); 
 })
 
 
