@@ -18,13 +18,7 @@ const dictionary = SpellChecker.getDictionarySync("en-US", function(err, diction
       
 
 
-
-
-
-//Vectorizer Class Declaration: 
-
-
-
+//Cleaner Class Declaration: 
 class Cleaner {
 
     constructor(textList) {
@@ -51,11 +45,17 @@ class Cleaner {
         return cleanTexts; 
     }
 
+    /**
+     * Method applies all data 'cleaning' and processing methods to the input tweets and sorts them into returned batches of 'processed' tweets.
+     */
+
 
     switchList(newTextList) {
-        //Switch out old textList for new textList in Constructor; 
         this.textList = newTextList; 
     }; 
+    /**
+     * Switch out old textList for new textList in Constructor; 
+     */
 
 
     initializeTokens(text) {
@@ -91,9 +91,13 @@ class Cleaner {
             return token !== ''
         }); 
 
-
         return tokens; 
         }
+        /**
+         * Method tokenizes the tweet strings of the tweets to individual word tokens. 
+         * emojis and slang words are converted to more proper words where possible. 
+         * non-letter based characters are removed from the strings. 
+         */
 
 
     emojiConvert(tokens) {
@@ -117,6 +121,10 @@ class Cleaner {
     
         return tokens;   
     }
+    /**
+     * Method converts emojis of a unicode format or simple text emojis to the words they correspond to. 
+     * Simple text emojis are converted based on a customized list of emoji to word pairings. 
+     */
 
 
     stopWordRemove(tokens) {
@@ -138,6 +146,9 @@ class Cleaner {
     
         return filtered; 
     }
+    /**
+     *Method removes stopwords (e.g. 'and', 'what', etc) from the tweet word tokens. 
+     */
 
 
     loopList (array, contractionList, word, index) {
@@ -147,6 +158,10 @@ class Cleaner {
             }
         };
     }
+    /**
+     * Method loops through a provided list of contractions-word pairings and splices the contractions array elements with non-contraction equivalents. 
+     * The contraction list is provided via a customized list contractions. 
+     */
 
 
     negationRemove(filtered) {
@@ -159,6 +174,10 @@ class Cleaner {
     
         return filtered;
     }
+    /**
+     * Method loops through word token arrays to remove and replace negations such as can't, don't, etc.  
+     * Uses a sub-method with 2 preset contraction lists. 
+     */
 
 
     lemmatization1(tokenList) {
@@ -195,7 +214,13 @@ class Cleaner {
         });  
         
         return tokenList;
-}
+    }
+    /**
+     * Method employs two different stemming and lemmatization algorithm packages to transform words to their base forms. 
+     * Example: angelic and angelical to angel.  Or was, were, is to 'be'.  
+     * Not perfect, as some words are not included in the scope of both algorithms. 
+     */
+
 
     finalSpellCheck(tokens) {
         //Singularize tokens with ' ' into single word tokens
@@ -209,46 +234,25 @@ class Cleaner {
             }
         }
 
-
         //SpellCheck all tokens one final time before vectorization: 
         const finalTokens = splitTokens.filter(token => {
             return dictionary.spellCheck(token); 
         })
-        
-        
+           
         return finalTokens;    
     }
-
-  tfidfGen(word, corpusDictionary, wordMap) {
-   //Add texts to corpus:
-   for (let i in corpusDictionary) {
-        tfidf.addDocument(corpusDictionary[i]); 
-   } 
-   
-   //Calculate the TF-IDF value and update the proper word map property:  
-   tfidf.tfidfs(word, function(i, measure) {
-        wordMap[word] = measure; 
-   }); 
-  }
+    /**
+     * Method splits composite word tokens into singular word tokens and applies a spell check to the word tokens. 
+     * Composite word tokens such as "do not" are singularized to "do" and "not" tokens. 
+     */
 }; 
 
 
-/**Vectorizer class: 
+/**Cleaner class: 
  * Remove undesired elements from an input array of texts including: HTML elements, non-letter characters, and gibberish characters. 
  * Convert contractions, emojis, and slang to common words.  
  * Stems and lemmatizes words where possible in order to provide common root words for easier pattern recognition for MLAs. 
- * Tokenizes words based on spacing and converts words to frequency based vectors, based on the "Bag of Words" technique. 
- * Assembles all vectors into a returned input matrix for further use. 
- * 
- * Note: This only involves cleaning up the features for the MLA; label assignments for training and test data sets must be handled outside of the vectorizer instance.
- * Note2: So far this vectorizer only uses a frequency space transformation, based on a simple BoW model.  tfidf (term frequency - inverse document frequency) can be used for assigning statistical weights to words in the texts.  
- * Note3: Vectorizer must accept an array of words in order to work properly.
- * 
- * Note4: The natural TFIDF uses the following syntax to perform its function: 
- *  tfidf.addDocument(string). 
- *  Therefore all documents in the corpus array can be added to the natural TDIDF algorithm. 
- *  The inclusion of a text is therefore not added, as the texts can be directly added to create the corpus right away. 
- *  This should ideally be done only once. 
+ * This class forms the basis for the "data preprocessing" technique used in this web app's machine learning focus. 
  */
 
 

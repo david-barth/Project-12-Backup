@@ -12,9 +12,12 @@ const inputVectorSchema = new Schema ({
         type: String, 
         default: 'kill', 
     },
-    //classification: 'unclassified',
 })
 
 const Vector = mongoose.model('vector', inputVectorSchema); 
 
 module.exports = Vector; 
+
+/*
+ *Mongoose model used to allow creation, storage, and retrieval of input vectors to the relevant database conneciton.  
+ */

@@ -12,11 +12,10 @@ class Preprocessor {
 
 
     async cleanAndVectorize(tweets, signal) {
-
         try {
             let container = []
 
-            //Load and Clean Tweets: 
+            //Load and Clean Tweets to cleaner class: 
             this.cleaner.switchList(tweets)
             const cleanedTweets = await this.cleaner.clean();
 
@@ -36,12 +35,18 @@ class Preprocessor {
             return 'done';     
 
         } catch (error) {
+            //Prepare error information in case if error occurs during cleaning and vectorizing process: 
             error.status = 500;
             error.message = 'Something went wrong.  Please do another search using a different search term';   
             return error;   
         }        
     }
-    
+    /** 
+     * Method cleans tweets of 'data noise', vectorizes tweets to numerical form, and stores tweet into a database collection. 
+     * Method also account for 'data augmentation' if the front end specifies an 'augment search'. 
+     * Generic 500 code error handling is provided for basic error handling purposes. 
+     * See readMe for information on the purposes of vectorization and cleaning, especially regarding the quality of the data. 
+    */
     
     async augment(vec) {
         let combinedVec = []; 
@@ -62,7 +67,13 @@ class Preprocessor {
         return combinedVec;
     }
 
-    //continuation: Investigate the mechanism of adding the two arrays together and then complete the augment backend functionality
+    /** 
+     * A specially adapted method that combines new input vector information with currently stored input vector information.
+     * The old input vector is deleted to make room for the new input vector.
+     * This method is invoked in case of a 'data augmentation' call from the frontend of the web app. 
+     * The backend is designed to use only one input vector, which is why the old stored input vector data is combined with the newly arrived input vector.
+     * See readMe for information on why data augmentation in neural network functionality and prediction accuracy. 
+    */
 
 
     async vectorize (docArray) {
@@ -90,6 +101,15 @@ class Preprocessor {
         
         return docVectors; 
     }
+    /** 
+     * Method vectorizes the cleaned tweet words into a vector (numerical) form. 
+     * A stored word map object is used as a template in order to 'count' relevant words that occur in the incoming tweets. 
+     * The word map is referred to as a 'dictionary' because these are the subject specific words the neural network is trained to recognize. 
+     * The word map is used to 'count' the relevant words in the tweet text content in order to construct the input vector. 
+     * See the readMe for an explanation about why a 'dictionary' of words is used in this neural network training. 
+     * See the wordMap model for info on the word map construction. 
+    */
+
 
     async storeVector(input) {
         //Iterate over inputs
@@ -104,7 +124,9 @@ class Preprocessor {
             await this.saveToDB(newVector, 'Vector'); 
         }
     }
-
+    /** 
+     * Stores the input vector to the database collection as a model under the label "Prediction".
+    */
 
     saveToDB(model, saveType) {
         model.save((err, result) => {
@@ -116,6 +138,9 @@ class Preprocessor {
             }
         });
     }
+    /** 
+     * Invoked to store a model to the appropriate mongo database collection. 
+    */
 
     dbDelete = () => {
         vector.deleteMany({label: 'Prediction'}, (err) => {
@@ -126,8 +151,17 @@ class Preprocessor {
           }
         })
       }; 
+    /** 
+     * Deletes the stored input vector if invoked. 
+    */
 }
 
-
+/** dataPreProcessor:  
+ *  This class is a sub-component to the DataPrepEngine class responsible for cleaning the tweet data, vectorizing it and storing it into the app database. 
+ *  This 'lower level' class makes use of two key techniques in machine learning natural language analysis: data augmentation and data preprocessing. 
+ *  'Data augmentation' involves increasing the 'amount' of data, which the 'augment' logic in this class accomplishes by 'adding' tweet data to the current input vector information. 
+ *  'Data preprocesisng' involves scrubbing the words for 'noise' that would lower the accuracy of the neural network prediction. 
+ *  These techniques are used in this class to optimize data for the neural network analysis. 
+*/
 
 module.exports.Preprocessor = Preprocessor; 

@@ -10,6 +10,7 @@ const axios = require('axios');
 //Helper functions: 
 
 const formatBody = (reqBody) => {
+  //Initialize properly formatted input object body: 
   let inputData = {
     mode: null,
     location: null,  
@@ -22,6 +23,7 @@ const formatBody = (reqBody) => {
     }; 
   let prepProp = 0; 
 
+  //Loop through request body to assign appropriate values to the inputData object: 
   for (let value in inputData) {
     let reqProp = prepProp.toString(); 
     if (reqBody[reqProp] !== '') {
@@ -32,31 +34,49 @@ const formatBody = (reqBody) => {
 
   return inputData; 
 }
+/**
+ * Function reformats request body data object to a format, with properties recognizable by the data processing engine. 
+ */
+
+
 
 const coinToss = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+/**
+ * Returns a value between the minimum and maximum values, like a coin toss. 
+ */
 
 
 
 async function getNews(newsCategory, res) {
   let newsObject = {}; 
 
+  //try block contains API call to The Guardian News API:
   try {
+    //get request to retrieve news articles and process data from the API based on the neural network predicted category: 
     const response = await axios.get('http://content.guardianapis.com/search?section=' + newsCategory  + '&api-key=ae474d61-be3d-47d0-861b-3918af113288')
     const articles = response.data.response.results; 
+
+    //Insert relevant property and data from API response object to a custom newsObject and delete input vector from database: 
     for (let i = 0; i < 3; i++) {
       newsObject['news'+ i] = articles[i]; 
     }
     await dbDelete(vector); 
     return newsObject
-  } catch (error) {
+  } 
+  //catch block to catch and return error code to frontend in case of error in the API call: 
+  catch (error) {
     let code = 500;
-    res.json({response: message, code: code})      
+    res.json({code: code})      
   }
 }
+/*
+ *Function makes an API call to The Guardian API, based on the neural network prediction. 
+ *News is formatted and the database is cleared, while the response is returned to the frontend.  
+ */
 
 
 const dbDelete = () => {
@@ -68,6 +88,11 @@ const dbDelete = () => {
     }
   })
 }; 
+/*
+ * Makes a delete call to the proper collection to delete prediction input vectors.
+ */
+
+
 
 //Tweet Post Route: 
 router.post('/tweetPost', function(req, res, next) {
@@ -148,18 +173,3 @@ router.get('/getNews', async function(req, res, next) {
 
 
 module.exports = router;
-
-
-
-//Notes on Async Functions and Await: 
-
-  //Await keyword declarations will only stop the flow of programming (blocking esque behavior) on the level of abstraction/file that the keyword is in. 
-
-  //If the level of abstraction is higher, than the await keyword will not stop the program flow on the higher level of abstraction. 
-
-  //Thus, this requires the use of await on the higher level of abstraction in order to deal with the flow of programming on that level. 
-
-  //This relation of keyword effect to level of abstraction can most likely be applied to other keywords. 
-
-
-

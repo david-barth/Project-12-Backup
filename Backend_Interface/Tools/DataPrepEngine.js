@@ -71,6 +71,12 @@ class DataPrepEngine {
     }
     return searchObject;  
   }
+  /** 
+   * Method formats a search query object from the input data of the front end.
+   * Conditional formatting is applied for 'hashtag filtering' and 'geographical filtering' modes. 
+   * Latitude and longitude values are obtained via a twitter API call, if geographical mode is selected. 
+  */
+
 
   repeatCheck (text, array) {
     let repeat = false;
@@ -99,14 +105,18 @@ class DataPrepEngine {
     }
     return repeat; 
   }
-
+  /** 
+   * Method removes any duplicate tweets that are present in the twitter API response object containing tweets. 
+  */
 
   getCoordinates(location, coordinates) {
     return new Promise((resolve, reject) => {
+          //Use twit module to make a GET request (via twit module) to twitter API, using location (and radius) data: 
           T.get('geo/search', {query: location, max_results: 1}, (err, data) => {
            if (err) {
                reject(err);
            } else {
+              //Resolve promise with latitude and longitude data:
               coordinates.lat = data.result.places[0].centroid[1]; 
               coordinates.long = data.result.places[0].centroid[0]; 
               resolve(coordinates);
@@ -114,12 +124,15 @@ class DataPrepEngine {
         });
      });
   }
-
+      /** 
+       * Method makes a GET request, using provided location (location and radius) data, for geographical coordinates from the twitter API. 
+       * The npm module is a promise enabled version of the twit package for easy asynchronous calls to the Twitter API. 
+      */
 
   async process(res, signal = '') {
-    
     const parameters = await this.searchParams;  
    
+    //Make GET request call to Twitter APU for tweets: 
     T.get('search/tweets', parameters, (err, data) => {   
         //Iterate through the twitter response: 
         const dataResponse = data.statuses;
@@ -138,60 +151,43 @@ class DataPrepEngine {
            
 
             if (repeatSignal) {
-                //Prevent Tweet Placement into DB: 
+                //Indicate repeated tweet: 
                 console.log('repeat');    
             } else {
-                //Push tweets to proper constructor property: 
+                //Collect tweet texts to proper container array: 
                 tweets.push(tweetText)
             }
         }
+      
+        //Apply cleaning and vectorizing procedure to obtained tweets: 
+        this.Preprocessor.cleanAndVectorize(tweets, signal).then(result => {
 
-      this.Preprocessor.cleanAndVectorize(tweets, signal).then(result => {
-
+          //Send response back to front end with proper information for frontend processing
           if (result === 'done') {
             res.json({response: signal, tweetCount: tweets.length, code: 200}); 
           } 
-          
+          //Send error information back to frontend in case of error presence: 
           else {
             res.json({code: result.status, message: result.message}); 
           }
       }); 
     })
   }
+        /** 
+         * Method uses query search object to make a get request call to the twitter API and processes tweet informaion to numerical input vector form. 
+         * The call is made and the tweet text information is resolved into a form appropriate for the tweet processing and vectorizing procedure. 
+         * Cleaning is inherently done via the Cleaner object (integrated to the preprocessor class) and the vectorization is handled here too. 
+         * The input vector itself is stored into the appropriate collection in the database.
+         * JSON responses are sent depending on the result of the tweet processing and vectorization. 
+        */
 }
 
 module.exports.DataPrepEngine = DataPrepEngine; 
 
-
-//Misc Notes about MongoDB: 
-
-    //In order for a database to show up in the db list in mongoDB, a document must first be inserted into it. 
-
-    //The method for copying databases: 
-
-        //1. mongodump -d some_database -c some_collection (-d flag specifies the db to be targeted, -c specifies the collection in the db)
-
-        //2. mongorestore -d some_other_db -c some_or_other_collection dump/some_collection.bson (Same termininology here, except the file pathh to the collection bson file must be targetted)
-
-        //Important note: These are commandline operations in the OS environment, not the mongoshell environment. 
-
-
-
-//Misc Notes on Twit: 
-
-    //Since there is a separate version of twit that only occurs with promise usage, it is assumed that the anomalous behavior observed at present is due to Twit not working well with async/await formatted functions. 
-
-    //Resolution: Simply use a return with a promise instance, within a function, rather than using the await/async format for this particular case. 
-
-
-//Planning for Tweet gathering function and blocking behavior: 
-
-  //Tentative Solution: Bring the dataProcessor class into this class and then have the cleaning and vectorizing be done within the promise. 
-
-    //Referencing this.tweets as a constructor property appears to break the scope of the then() chain and refers to the complete collection of tweets, after the iteration is done. 
-
-//Misc Notes: 
-
-  //(Something) is evaluated to true if it is defined.  This is applied in the case of logical comparison and true/false conditional operations within if statements. 
-
+/** DataPrepEngiine: 
+ *  This class is a 'master control class' that handles initial data processing of frontend data, calls to the twitter API, and tweet processing/vectorizing. 
+ *  The engine contains an integrated dataPreprocessor class instance that handles the 'dirty details' of tweet processing and vectorization. 
+ *  This class contains higher level functionality that mediates half of the backend data processing, once the search form input values are sent in from the frontend. 
+ *  See readME for more information on the purpose of WHY tweet processing is needed, which explores the importance of this class in the web app backend functionality.
+ */
 
