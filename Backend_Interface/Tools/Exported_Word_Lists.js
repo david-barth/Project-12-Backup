@@ -1,6 +1,3 @@
-
-
-
 const contracted = {
     "ain't": "am not",
   "aren't": "are not",
@@ -321,38 +318,14 @@ const emoticons = {
 };
 
 
-const wordEncodings = {
-    'a': 1, 
-    'b': 2,
-    'c': 3,
-    'd': 4,
-    'e': 5,
-    'f': 6,
-    'g': 7,
-    'h': 8,
-    'i': 9,
-    'j': 10,
-    'k': 11,
-    'l': 12,
-    'm': 13,
-    'n': 14,
-    'o': 15,
-    'p': 16,
-    'q': 17,
-    'r': 18,
-    's': 19,
-    't': 20,
-    'u': 21,
-    'v': 22,
-    'w': 23,
-    'x': 24,
-    'y': 25,
-    'z': 26,
-}
 
 
 
-//Possible to use this object in a for in loop, with proper object orientation to facilitate replacement.  
+
+/**
+ * Lists here contain conversion for contractions and emojis for use during the vector cleaning process. 
+ * Each list is object that is used to convert eiter the text emoji to its associated word or to convert a contraction to its uncontracted form.
+ * */  
 
 module.exports.contracted = contracted; 
 module.exports.contracted2 = contracted2; 
