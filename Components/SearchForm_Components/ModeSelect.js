@@ -6,16 +6,15 @@ import 'materialize-css/dist/css/materialize.min.css';
 
 
 class ModeSelect extends Component {
-    constructor(props) {
-        super(props); 
-
-       
-    }
 
     componentDidMount() {
         const select = this.props.ref1.current;  
         var instances = M.FormSelect.init(select);
     }
+    /**
+     * Initialize Google Materialize selection menu upon component mounting. 
+     */
+
     render() {
         const ref1 = this.props.ref1;
         return (
@@ -24,10 +23,10 @@ class ModeSelect extends Component {
                     <div className="card blue darken-1">
                     <div className="card-content white-text">
                         <span className="card-title">Local or Global?</span>
-                        <p> Select whether you wish to gather tweets from around the world ("Global Mode") or 
-                        if you wish to gather tweets within a certain region ("Geographic Mode"). 
-                        All Geographic Mode searches require a location and will be made within a certain radius
-                        of that location. 
+                        <p> Select whether you wish to gather tweets from around the world ("Global") or 
+                        if you wish to gather tweets within a certain region ("Geographical"). 
+                        All Geographical Mode searches require a location and will be made within a certain radius
+                        of that location (in km).
                         </p>
                     </div>
                     </div>
@@ -45,7 +44,9 @@ class ModeSelect extends Component {
     }
 }
 
-
-
+/**
+ * ModeSelect component contains elements and functionalities to enable or disable a geographical tweet search. 
+ * Select menu choice moderates 'geoState' state information in SearchForm, which enables or disables the geographical search inputs. 
+ */
 
 export default ModeSelect; 

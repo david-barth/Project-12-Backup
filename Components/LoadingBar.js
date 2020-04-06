@@ -11,4 +11,9 @@ const LoadingBar = () => {
     )
 }
 
+/**
+ * Component contains a basic loading bar used for fetch requests to the backend. 
+ * Loading bar is used to sync frontend behavior with backend processs. 
+ */
+
 export default LoadingBar; 

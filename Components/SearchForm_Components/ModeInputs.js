@@ -4,11 +4,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 
 
 class ModelInputs extends Component {
-    constructor(props) {
-        super(props); 
-
-    }
-
+   
     render() {
         const geoState = this.props.geoState;
         const ref2 = this.props.ref2; 
@@ -52,5 +48,12 @@ class ModelInputs extends Component {
           )
     }
 }
+
+/**
+ * ModeInputs component contains all inputs and functionalities needed for the 'Geographical Search Mode' of SearchForm. 
+ * 'geoState' state in SearchForm used to enable/disable 'Location' and 'Radius' inputs, which is mediated by "Geographical Mode" vs "Global Mode" selection.
+ * alert() based Form validation used, with customized letter constraint for 'Location' and number constraint for 'Radius'.  No empty inputs allowed either. 
+ * Display style switch to 'none' (triggered by 'Next' button) prevents easy use of HTML 5 validation schemes for this half of SearchForm. 
+ */
 
 export default ModelInputs; 

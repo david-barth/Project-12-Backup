@@ -3,7 +3,6 @@ import '../../App.css';
 import 'materialize-css/dist/css/materialize.min.css';
  
 
-
 const StatDisplay = (props) => {
     return (
         <div className="collection">
@@ -14,5 +13,11 @@ const StatDisplay = (props) => {
         </div>
     )
 }
+
+/** 
+ * Component displays tweet statistics including: number of tweets processed so far (tweet count) and number of completed searches (tweet search). 
+ * Tweet count statistic is used to make a recommendation on whether or not a news GET request should be made. 
+ * Statistics information derived from stats object passed from App component. 
+*/
 
 export default StatDisplay; 

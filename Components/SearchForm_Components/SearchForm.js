@@ -6,8 +6,8 @@ import HashtagFilter from './HashtagFilter';
 
 class SearchForm extends Component {
     
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
 
         //Refs: 
         this.geoRef = React.createRef(); 
@@ -38,40 +38,55 @@ class SearchForm extends Component {
             formPart: 1
         }); 
     }
-
-    get initialState() {
-        return {
-          activeComponent: ''
-        };
-      }
+    /**
+     * Initialize SearchForm states for geographical inputs, hashtag inputs, and form advvancement. 
+     * formPart state indicates which half of the SearcForm component is displayed currently. 
+     */
+    
 
     componentDidMount() {
         this.initialize();
     }
 
+    /**
+     * SearchForm states are initialized upon component mounting. 
+     */
+
     componentDidUpdate() {
        const geoNode = this.geoRef.current; 
        const hashNode = this.hashRef.current;
+
+       //Initialize displays of SearchForm subc-components
        hashNode.style.display = 'none'
        
+       //Alter displays of sub-components to advance to next half of the SearchForm component: 
        if (this.state.formPart === 2) {
             geoNode.style.display = 'none'; 
             hashNode.style.display = 'block'; 
        }
     }
-    //The Update lifecycle event will apply with the initialization of states in componentDidMount. 
-    //This will allow for a seamless (from the user perspective) changing of the div displays as needed. 
-
+    /**
+     * formPart state examined to determine which half (geographical or hashtag) of SearchForm to display on component update. 
+     */
 
     advanceForm () {
+        //Apply alert() based validation constraints on Geographical Mode form elements: 
         const signal = this.validationCheck(); 
         
+        //Either update formPart state if validationCheck is passed or send alert with validation information: 
         if (signal === 'Pass') {
             this.setState({formPart: 2});
         } else {
             alert(signal); 
         }
     }
+    /** 
+     * Method advances the SearchForm element from the 'Geographical' half to 'Hashtag/Tweet Subject' half upon validation passing. 
+     * formPart state of 1 is tied to Geographical half and a state value of 2 is the tweet subject half. 
+     * Customized valuidation schemes provided for this part, based on programmatic alert(). 
+     * Method handdler is tied to the "Next" button. 
+    */
+
 
     validationCheck() {
         let inputs = [
@@ -115,11 +130,17 @@ class SearchForm extends Component {
         
         return 'Pass';  
     }
- 
+    /** 
+     * Method defines and uses validation constraints for 'Mode Select', 'Location', and 'Radius' inputs/elements. 
+     * Constraints include: checks for empty input values, letter values for Location, and numerical values for Radius. 
+     * Nethod sends a 'Pass' signal if validation constraints are met or if 'Global' mode is selected in 'Mode Select'.
+     * Otherwise, a validation error message is returned with information on which validation constraints failed.  
+    */
 
     async geoSelection(e) {
         const selection = e.target.value;
         
+        //Toggle geoState based on which Mode Select option is selected: 
         if (selection === 'global') {
             await this.setState({geoState: true}); 
         } 
@@ -127,10 +148,16 @@ class SearchForm extends Component {
             await this.setState({geoState: false}); 
         }
     } 
+    /** 
+     * Handler sets the geostate state to true or false based on select menu choice. 
+     * This state is used to enable or disable the 'Location' and 'Radius' inputs needed for a geographical search for tweets. 
+     * Hanlder is tied to the select menu in 'ModeSelect' component. 
+    */
 
     
 
     hashSelection() {
+        //Toggle hashState based on chosen option from radio button and the inverse of previous hashState: 
         if (this.state.radioState === 'option1' && !this.state.hashState) {
             this.setState((prevState) => ({
                 hashState: !prevState.hashState  
@@ -142,15 +169,22 @@ class SearchForm extends Component {
             })); 
         }
     }
-
-    //Logic: If option1 is selected, then the hashState is false for disabled.  Vice versa applied.
+    /** 
+     * Method enables or disables the hashtag inputs based on prior radio button selection.  
+     * Additional logic, based on prior hashState, is used to reinforce a binary behavior in input enabling/disabling based on radio button choice.
+     * Tied to the SearchSelect component. 
+    */
 
     radioChoice(e) {
         this.setState({
             radioState: e.target.value
         });        
     }
-    //Note: e can be used in place of other event based names for React based event handlers
+    /** 
+     * Handler sets radiosState value based on user selection of radio buttons. 
+     * This state and hanlder 'reocrds' user choice on radio buttons in order to enable or disable hashtag input elements. 
+     * Acts as the first step in the above 'hashSelection' handler. 
+    */
 
 
     render() {
@@ -197,15 +231,15 @@ class SearchForm extends Component {
     }
 }
 
+/** 
+ * SearchForm component contains all functionalities and elements needed to specify user's tweet search specifications. 
+ * The component is divided into 2 halfs: a 'Geographical' half and a 'Tweet Subject/Hashtag' half. 
+ * Geographical half: User selects if they want to commence with geographical mode search, which filters tweet search for tweets based on location within a certain radius. 
+ * Tweet Subject half: User selects if they wish to narrow the search based on including hashtag operators in the tweet search.  
+ * If hashtag filtering is omitted, then primary tweet subject is specified here. 
+ * State is used to enable / disable certain inputs related to these search features. 
+ * Form sub-components are displayed once at a time, controlled via state.
+ * Therefore, HTML 5 validation is only used for one half of the form while custom alert() validation is used for another half.
+*/
+
 export default SearchForm; 
-
-
-//Strategy for React-HTML5 form validity: 
-
-    //Separate validations must be accounted for each half of the submit form. 
-
-    //The first half must have an event handler or function that will allow for the advancing of the component rendering. 
-
-    //This validation will have to be applied with the logic in the componentDidUpdate method in order to prevent rendering from occuring. 
-
-    //The biggest issue is not being able to allow for the HTML 5 validation message to shown as needed

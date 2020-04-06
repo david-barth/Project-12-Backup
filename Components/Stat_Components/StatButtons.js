@@ -17,6 +17,9 @@ const StatButtons = (props) => {
     )
 }; 
 
+/** 
+ * Component contains buttons to allow news analysis and GET functionality as well as augment search functionality. 
+ * Augment search allows for a search for tweets of a subject related to the previous search subject. 
+*/
 
 export default StatButtons; 
-

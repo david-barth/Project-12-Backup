@@ -5,6 +5,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 
 
 const Article = (props) => {
+    //Split date from time: 
     const timeAndDate = props.articleInfo.date.split('T'); 
     const date = timeAndDate[0]; 
 
@@ -30,5 +31,9 @@ const Article = (props) => {
     )
 }; 
 
+/**
+ * Component progrmamatically holds the article title, category (section), date of publication and URL. 
+ * Displayed in a card and linked to NewsDisplay. 
+ */
 
 export default Article; 

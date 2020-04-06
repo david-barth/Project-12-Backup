@@ -5,12 +5,6 @@ import TweetInput from './TweetInput';
 
 
 class SearchSelect extends Component {
-    constructor(props) {
-        super(props);
-        
-        
-    }
-
     render() {
 
         const ref4 = this.props.ref4; 
@@ -33,5 +27,10 @@ class SearchSelect extends Component {
         )
     }
 }
+
+/**
+ * SearchSelect is a wrapper component for elements and functionalities relating to radio button enabling / disabling of hashtag search inputs. 
+ * Elements of explanation for the 'Tweet subject' half of SearchForm are contained in this wrapper component. 
+ */
 
 export default SearchSelect; 

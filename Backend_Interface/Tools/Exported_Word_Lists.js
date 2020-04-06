@@ -330,4 +330,3 @@ const emoticons = {
 module.exports.contracted = contracted; 
 module.exports.contracted2 = contracted2; 
 module.exports.emoticons = emoticons; 
-module.exports.wordEncodings = wordEncodings; 

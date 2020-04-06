@@ -16,8 +16,8 @@ const SideItem3 = () => {
                         This app's operation is very simple: it gathers tweets off of twitter, batches them together, feeds them to a neural network, and then uses the resulting prediction to serve news topics.
                         In a way, we can call this "smart news" because the recommended news topics will change depending on the word content of the tweets fed into the neural network. 
                         The topics are: world news, science and technology, business news, soccer news, and environmental news; all articles are gathered from The Guardian. 
-                        If the gathered tweet word content reflects soccer, then soccer will be the first in your recommendations and so on. 
-                        Overall, machine learning allows for a flexible and responsive approach to news recommendation. 
+                        If the gathered tweet word content reflects the label 'soccer', then soccer will be the first in your recommendations and so on. 
+                        Overall, machine learning allows for a flexible and adaptive approach to news recommendation. 
                     </p>
                 </div>
                 </div>
@@ -26,5 +26,9 @@ const SideItem3 = () => {
     )
 }; 
 
+/**
+ * Component contains explanation on the app's overall purpose and functionality. 
+ * Information provided includes: app's targeted news topics and basic interpretation of app analytical process. 
+ */
 
 export default SideItem3; 

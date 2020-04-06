@@ -10,9 +10,6 @@ import StatButtons from './StatButtons';
 
 
 class Stat extends Component {
-
-
-
     render() {
         return (
             <Fragment>
@@ -26,15 +23,14 @@ class Stat extends Component {
     }
 }
 
-
+/** 
+ * Stat component acts as a wrapper for tweet statistics and news retrieval functionalities on the frontend. 
+ * This component is updated to reflect the current number of searches and tweets present. 
+ * Component purpose is to inform the user about whether or not neural network analysis and news retrieval should be attempted. 
+ * This is done via a recommendation given in the component.
+ * Functionality to do an 'augment' search, for better prediction accuracy is also contained here.   
+*/
 
 export default Stat; 
 
-//Continuation: 
-
-    //1. Transfer all getNews related functionality up to the App level component. 
-
-    //2. Convert the Stat component back to a functional component. 
-
-    //3. Complete the NewsDisplay Component Functionality. 
 

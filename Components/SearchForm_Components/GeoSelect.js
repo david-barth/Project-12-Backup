@@ -8,12 +8,6 @@ import ModelInputs from './ModeInputs';
 
 class GeoSelect extends Component {
 
-    constructor(props) {
-        super(props);
-        
-       
-    }
-
     render() {
         const ref1 = this.props.ref1; 
         const ref2 = this.props.ref2; 
@@ -36,5 +30,10 @@ class GeoSelect extends Component {
         )
     }
 }
+
+/**
+ * GeoSelect Component is a wrapper component that contains elements for the "Geographical Search" half of SearchForm. 
+ * Component display is disabled upon clicking of the "Next" button within this component. 
+ */
 
 export default GeoSelect; 

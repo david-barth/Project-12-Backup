@@ -26,5 +26,8 @@ const SideItem4 = () => {
     )
 }; 
 
+/**
+ * Component contains explanation of how the app neural network interprets input patterns. 
+ */
 
 export default SideItem4; 

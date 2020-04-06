@@ -19,5 +19,9 @@ const Nav = (props) => {
     )
 }
 
+/** 
+ * Nav component contains all the main routing for the SideNav, SearchForm, Stat, and NewsDisplay components. 
+ * 'Start a new search!' will trigger a complete wip of all current tweet statistics and of the current input vector in the database. 
+*/
 
 export default Nav; 

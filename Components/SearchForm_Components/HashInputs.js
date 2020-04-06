@@ -4,11 +4,6 @@ import 'materialize-css/dist/css/materialize.min.css';
 
 
 class HashInputs extends Component {
-    constructor(props) {
-        super(props); 
-
-
-    }
 
     render() {
 
@@ -32,7 +27,7 @@ class HashInputs extends Component {
                     </div>
                 </div>
     
-                <div className="row" onChange={this.props.toggle}>
+                <div className="row">
                     <div className="input-field col s12">
                         <input 
                                 placeholder="Enter second hashtag here..." 
@@ -50,5 +45,10 @@ class HashInputs extends Component {
         )
     }
 }
+
+/**
+ * HashInputs component contains inputs related to 'hashtag searching' for the 'tweet subject' of the tweet search. 
+ * hashState() props method enables/disables these inputs based on radio button choice in this half of the SearchForm. 
+ */
 
 export default HashInputs; 

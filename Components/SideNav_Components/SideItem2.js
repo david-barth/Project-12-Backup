@@ -26,5 +26,8 @@ const SideItem2 = () => {
     )
 }; 
 
+/**
+ * Component contains elements hosting explanation for basic neural network theory.  
+ */
 
 export default SideItem2; 

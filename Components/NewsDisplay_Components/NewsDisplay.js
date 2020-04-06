@@ -17,11 +17,6 @@ class NewsDisplay extends Component {
             selectedArticle: 1 
         }
 
-        //Refs: 
-        this.ref1 = React.createRef(); 
-        this.ref2 = React.createRef(); 
-        this.ref3 = React.createRef(); 
-
         //Other Properties
         this.articleCount = [1, 2, 3];
         
@@ -34,11 +29,14 @@ class NewsDisplay extends Component {
         const selected = e.target.id; 
         await this.setState({selectedArticle: selected}); 
     }
-
+    /**
+     * Handler responsible for changing the article that is displayed in this component, based on the id of the selected Navlink. 
+     */
 
 
     render() {
 
+        //Render reduced component if NewsDisplay component is loaded before news GET request is completed: 
         if (this.props.articleInfo === null) {
             return (
                 <Fragment>
@@ -49,7 +47,9 @@ class NewsDisplay extends Component {
             )
         }
         
+        //Render full NewsDisplay component: 
         else if (this.props.articleInfo) {
+            //Use selected NavLink id to assign proper information to Article component: 
             const selectionNumber = this.state.selectedArticle;
             const articles = this.articleCount.map(recNum => {
                 const recString = recNum.toString();  
@@ -57,6 +57,7 @@ class NewsDisplay extends Component {
             });  
             let activeArticle = articles[selectionNumber - 1];
 
+            //Render chosen Article component: 
             return (
                 <Fragment>
                     <div className="row">
@@ -73,9 +74,11 @@ class NewsDisplay extends Component {
     }
 }
 
+/**
+ * NewsDisplay component diplsays processed information from the News GET request, via Article components. 
+ * State is used to control which information, from the articleInfo prop is attached to the Article component. 
+ * Component conditionally renders 2 different versions depending on if a news GET request was made previously or not. 
+ */
+
+
 export default NewsDisplay; 
-
-
-//Worth noting that React still requires anchor tags to be used in cases where external URLs are to be integrated into the programming. 
-
-    //Reacter Router components like <link> and <NavLink> are used for internal routing within the context of the client side only, not for other servers. 

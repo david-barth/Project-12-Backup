@@ -18,8 +18,7 @@ import SideItem4 from './SideItem4';
 class SideNav extends Component {
 
     constructor() {
-        super(); 
-        
+        super();         
         this.sideNavRef = React.createRef(); 
     }
 
@@ -27,6 +26,9 @@ class SideNav extends Component {
         const elems = this.sideNavRef.current; 
         const instances = M.Sidenav.init(elems);
     }
+    /** 
+     * Constructor ref used to initialize the sideNav funtionality on component mounting. 
+    */
 
     render() {
         return (
@@ -51,5 +53,11 @@ class SideNav extends Component {
         )
     }
 }; 
+
+/** 
+ * The SideNav component contains the overview of the app, basic neural network theory, and explanation of the app processes. 
+ * Component divides these explanations into 4 categories or sections. 
+ * The sideNav component is only present in the 'Non-functional' rendering of the app and is accessed via the main Nav component. 
+*/
 
 export default SideNav; 

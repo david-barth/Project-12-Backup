@@ -4,11 +4,6 @@ import SearchSelect from './SearchSelect';
 import HashInputs from './HashInputs'; 
 
 class HashtagFilter extends Component {
-    
-    constructor(props) {
-        super(props); 
-
-    }
 
     render() {
         const ref4 = this.props.ref4; 
@@ -46,6 +41,9 @@ class HashtagFilter extends Component {
     }
 }; 
 
+/**
+ * HashtagFilter component acts as a wrapper component for 'tweet subhect' and 'hashtag' inputs.  
+ * Also contains submit button for form submission, for use with 'initial' and 'augment' searches, using submit handlders from the App component.
+ */
+
 export default HashtagFilter; 
-
-

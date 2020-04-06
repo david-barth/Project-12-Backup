@@ -29,5 +29,10 @@ const SideItem1 = () => {
     )
 }
 
+/**
+ * Component used to host elements containing overview of the web app. 
+ * Included in SideNav.  
+ * Main limitation: Can be reduced to a more reusable form in future iterations of the web app. 
+ */
 
 export default SideItem1; 
