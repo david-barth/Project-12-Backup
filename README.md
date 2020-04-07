@@ -100,7 +100,7 @@ At any point in the app's operation, if the Nav component option "Start a new se
             
             B. The recommendation is made to advance to the news retrieval process with 50 or more tweets.  
             
-            C. This is ideal for neural network prediction accuracy, but thanks to the training process,the prediction can be accurate                under 50 tweets.  
+            C. This is ideal for neural network prediction accuracy, but the prediction can be accurate under 50 tweets.  
             
             D. The choice for an augment search is truly left with the user, and news can still be retrieved by clicking 'Read'.  
             
